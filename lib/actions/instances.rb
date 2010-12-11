@@ -1,7 +1,10 @@
 # Instances
 
 get '/:project/instances' do
-  @instances = @ec2.describe_instances.reverse
+  @servers = []
+  @ec2_compute.servers.reverse.each do |server|
+    @servers << JSON.parse(server.to_json)
+  end
   erb :instances
 end
 

@@ -1,39 +1,39 @@
 <% @title = 'Instances' %>
-<%= table(@instances, :aws_state, :aws_instance_id, :aws_availability_zone, :aws_instance_type, :aws_groups) %>
+<%= json_table(@servers, "state", "id", "availability_zone", "flavor_id", "groups") %>
 <br />
-<% unless @instances.empty? %>
+<% unless @servers.empty? %>
 
     <div id="instances">
-        <% @instances.each_with_index do |instance, i| %>
+        <% @servers.each_with_index do |instance, i| %>
     
             <div class="instance<% if i % 2 == 1%> odd<% end %>">
                 [<b class="state state-<%= instance[:aws_state] %>">
-                    <%= instance[:aws_instance_id] %>
-                    <span title="<%= instance[:aws_instance_id] %>"><%= instance[:aws_state] %></span>
+                    <%= instance["id"] %>
+                    <span title="<%= instance['id'] %>"><%= instance['state'] %></span>
                 </b>]
                 
-                <%= link_to instance[:aws_image_id], "/images/search/#{instance[:aws_image_id]}" %>
+                <%= link_to instance["id"], "/images/search/#{instance["id"]}" %>
                 
-                launched <%= time_ago_or_time_stamp(Time.parse(instance[:aws_launch_time])) %>
+                launched <%= time_ago_or_time_stamp(Time.parse(instance["created_at"])) %>
                 
-                <%= link_to(image_tag('info.png', :alt => 'Console Output'), "/#{@project}/instance/#{instance[:aws_instance_id]}/output") %>
+                <%= link_to(image_tag('info.png', :alt => 'Console Output'), "/#{@project}/instance/#{instance["id"]}/output") %>
                 
-                <% if instance[:aws_state] == 'running' %>
-                    <%= link_to image_tag('reboot.png', :alt => 'Reboot Instance'), "/#{@project}/instance/#{instance[:aws_instance_id]}/reboot", :onclick => "return confirm('Reboot: Are you sure?')"  %>
-                    <%= link_to image_tag('minus.png', :alt => 'Terminate Instance'), "/#{@project}/instance/#{instance[:aws_instance_id]}/terminate", :onclick => "return confirm('Terminate: Are you sure?')" %>
+                <% if instance['state'] == 'running' %>
+                    <%= link_to image_tag('reboot.png', :alt => 'Reboot Instance'), "/#{@project}/instance/#{instance['id']}/reboot", :onclick => "return confirm('Reboot: Are you sure?')"  %>
+                    <%= link_to image_tag('minus.png', :alt => 'Terminate Instance'), "/#{@project}/instance/#{instance['id']}/terminate", :onclick => "return confirm('Terminate: Are you sure?')" %>
                 <% end %>
                 
                 <div>
                     <small>
-                        Type: <%= instance[:aws_instance_type] %>, Groups: <% instance[:aws_groups].each do |group| %><%= link_to group, "/groups##{group}" %><% end %>, 
-                        Key: <%= link_to instance[:ssh_key_name], "/#{@project}/keys##{instance[:ssh_key_name]}" %>, Zone: <%= instance[:aws_availability_zone] %>
+                        Type: <%= instance['flavor_id'] %>, Groups: <% instance['groups'].each do |group| %><%= link_to group, "/groups##{group}" %><% end %>, 
+                        Key: <%= link_to instance['id'], "/#{@project}/keys##{instance['id']}" %>, Zone: <%= instance["availability_zone"] %>
                     </small>
                 </div>
                 
-                <% if instance[:aws_state] == 'running' %>
+                <% if instance['state'] == 'running' %>
                     <div>
-                        Public: <span><%= instance[:dns_name] %></span> <a href="http://<%= instance[:dns_name] %>" target="_new">url</a><br/>
-                        Private: <span><%= instance[:private_dns_name] %></span>
+                        Public: <span><%= instance['dns_name'] %></span> <a href="http://<%= instance['dns_name'] %>" target="_new">url</a><br/>
+                        Private: <span><%= instance['private_dns_name'] %></span>
                     </div>
                 <% end %>
                 

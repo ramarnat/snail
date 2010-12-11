@@ -61,6 +61,31 @@ module Helpers
     html << "\n</table>"
   end
   
+  def json_table(collection, *columns)   
+    return '' if collection.size == 0
+    raise 'Collection element is not a Hash' if collection.first.class != Hash
+    if columns == []
+      # auto load a list of keys
+      first = collection.first
+      columns = first.keys.collect { |item| item.to_s }.sort
+    end
+    html = '<table class="list">'
+    html << "\n<tr><th>" + columns.join('</th><th>') + '</th>'
+    html << '<th>options</th>' if block_given?
+    html << '</tr>'
+    iterator = 0
+    collection.each do |item|
+      html << "\n<tr#{ ' class="alt"' if iterator%2==0}>"
+      columns.each { |key| html << "<td>#{item[key]}</td>"  }
+      if block_given?
+        html << "<td>#{yield(item)}</td>" 
+      end
+      html << '<tr>'
+      iterator += 1
+    end
+    html << "\n</table>"
+  end
+  
   def to_query(hash = {})
     raise 'Not a hash' if hash.class != Hash
     hash.keys.collect { |key| "#{key}=#{hash[key]}" }.join('&amp;')
