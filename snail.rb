@@ -15,6 +15,9 @@ require 'yaml'
 require 'ruby-debug'
 require 'fog'
 require 'json'
+require 'pp'
+require 'chef'
+
 
 # load all files in lib
 Dir["lib/*.rb"].each { |x| load x }
@@ -28,16 +31,19 @@ set :projects, config_file.keys
 
 before do
   @projects = options.projects
+    
   first = request.path.split('/')[1]
+  puts first
+  puts @projects
+  
   if config = options.config[first]
     @project = first
     @ec2 = RightAws::Ec2.new(config['aws_key'], config['aws_secret'])
     @s3 = RightAws::S3.new(config['aws_key'], config['aws_secret'])
 
     @ec2_compute = Fog::AWS::Compute.new(:aws_access_key_id => config['aws_key'], :aws_secret_access_key => config['aws_secret'])
+    Chef::Config.from_file(config['knife_config'])
 
-    
-    
   else
     redirect '/projects' if first != 'projects' and !File.exists?("public#{request.path}") and !request.path.include?('__sinatra__')
   end

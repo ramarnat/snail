@@ -1,24 +1,56 @@
 # Instances
 
+
 get '/:project/instances' do
+  if config = options.config[params[:project]]
+    @project = params[:project]
+    @ec2_compute = Fog::AWS::Compute.new(:aws_access_key_id => config['aws_key'], :aws_secret_access_key => config['aws_secret'])
+    Chef::Config.from_file(config['knife_config'])
+  end 
+
+  @nodes = Chef::Node.list
+
   @servers = []
   @ec2_compute.servers.reverse.each do |server|
-    @servers << JSON.parse(server.to_json)
+    node = JSON.parse(server.to_json)
+    node["chefified"] = true if @nodes[server.id]
+    @servers << node
   end
+  
   erb :instances
 end
 
 get '/:project/instance/:instance_id/terminate' do
-  @output = @ec2.terminate_instances(params[:instance_id])
+  @output =  @ec2_compute.servers.get(params[:instance_id]).destroy
   redirect '/instances'
 end
 
 get '/:project/instance/:instance_id/output' do
-  @output = @ec2.get_console_output(params[:instance_id])
+  @output =  @ec2_compute.servers.get(params[:instance_id]).console_output.body
   erb :output
 end
 
 get '/:project/instance/:instance_id/reboot' do
-  @ec2.reboot_instances([params[:instance_id]])
+  node =  @ec2_compute.servers.get(params[:instance_id])
+  @output = @node.reboot if @node['state'] == 'running'
   redirect '/instances'
+end
+
+get '/:project/instance/:instance_id/start' do
+  node =  @ec2_compute.servers.get(params[:instance_id])
+  @output = @node.start if @node['state'] == 'stopped'
+  redirect '/instances'
+end
+
+get '/:project/instance/:instance_id/stop' do
+  node =  @ec2_compute.servers.get(params[:instance_id])
+  @output = @node.stop if @node['state'] == 'running'
+  redirect '/instances'
+end
+
+
+get '/:project/instance/:instance_id/Chef' do  
+  @node = Chef::Node.load(params[:instance_id])
+  @node = JSON.pretty_generate(@node)
+  erb :node_raw
 end

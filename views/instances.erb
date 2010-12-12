@@ -33,7 +33,8 @@
                 <% if instance['state'] == 'running' %>
                     <div>
                         Public: <span><%= instance['dns_name'] %></span> <a href="http://<%= instance['dns_name'] %>" target="_new">url</a><br/>
-                        Private: <span><%= instance['private_dns_name'] %></span>
+                        Private: <span><%= instance['private_dns_name'] %></span><br/>
+                        <% if instance['chefified'] %> <%= link_to 'Chef Information', "/#{@project}/instance/#{instance['id']}/Chef"  %> <% end %>
                     </div>
                 <% end %>
                 
