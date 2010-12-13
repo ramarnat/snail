@@ -31,7 +31,6 @@ set :projects, config_file.keys
 
 before do
   @projects = options.projects
-<<<<<<< HEAD
   @project = request.path.split('/')[1] 
   @fog_service = request.path.split('/')[2]
   pp @fog_service
@@ -45,17 +44,6 @@ before do
     # Fog
     @ec2_compute = Fog::AWS::Compute.new(:aws_access_key_id => config['aws_key'], :aws_secret_access_key => config['aws_secret']) if @fog_service == 'compute'
     @ec2_iam = Fog::AWS::IAM.new(:aws_access_key_id => config['aws_key'], :aws_secret_access_key => config['aws_secret']) if @fog_service == 'IAM'
-=======
-  @project = request.path.split('/')[1]
-  config = options.config[@project]
-  if config
-    @ec2 = RightAws::Ec2.new(config['aws_key'], config['aws_secret'])
-    @s3 = RightAws::S3.new(config['aws_key'], config['aws_secret'])
-    
-    # Fog
-    @ec2_compute = Fog::AWS::Compute.new(:aws_access_key_id => config['aws_key'], :aws_secret_access_key => config['aws_secret'])
-    Chef::Config.from_file(config['knife_config'])
->>>>>>> 74d305396c625da0b812367696a972e57ecda759
   else
     redirect '/projects' if @project != 'projects' and !File.exists?("public#{request.path}") and !request.path.include?('__sinatra__')
   end
