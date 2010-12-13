@@ -2,11 +2,6 @@
 
 
 get '/:project/instances' do
-  if config = options.config[params[:project]]
-    @project = params[:project]
-    @ec2_compute = Fog::AWS::Compute.new(:aws_access_key_id => config['aws_key'], :aws_secret_access_key => config['aws_secret'])
-    Chef::Config.from_file(config['knife_config'])
-  end 
 
   @nodes = Chef::Node.list
 
