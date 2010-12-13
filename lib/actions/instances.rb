@@ -1,7 +1,7 @@
 # Instances
 
 
-get '/:project/instances' do
+get '/:project/compute' do
 
   @nodes = Chef::Node.list
 

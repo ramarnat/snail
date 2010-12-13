@@ -16,11 +16,11 @@
                 
                 launched <%= time_ago_or_time_stamp(Time.parse(instance["created_at"])) %>
                 
-                <%= link_to(image_tag('info.png', :alt => 'Console Output'), "/#{@project}/instance/#{instance["id"]}/output") %>
+                <%= link_to(image_tag('info.png', :alt => 'Console Output'), "/#{@project}/compute/#{instance["id"]}/output") %>
                 
                 <% if instance['state'] == 'running' %>
-                    <%= link_to image_tag('reboot.png', :alt => 'Reboot Instance'), "/#{@project}/instance/#{instance['id']}/reboot", :onclick => "return confirm('Reboot: Are you sure?')"  %>
-                    <%= link_to image_tag('minus.png', :alt => 'Terminate Instance'), "/#{@project}/instance/#{instance['id']}/terminate", :onclick => "return confirm('Terminate: Are you sure?')" %>
+                    <%= link_to image_tag('reboot.png', :alt => 'Reboot Instance'), "/#{@project}/compute/#{instance['id']}/reboot", :onclick => "return confirm('Reboot: Are you sure?')"  %>
+                    <%= link_to image_tag('minus.png', :alt => 'Terminate Instance'), "/#{@project}/compute/#{instance['id']}/terminate", :onclick => "return confirm('Terminate: Are you sure?')" %>
                 <% end %>
                 
                 <div>
@@ -34,7 +34,7 @@
                     <div>
                         Public: <span><%= instance['dns_name'] %></span> <a href="http://<%= instance['dns_name'] %>" target="_new">url</a><br/>
                         Private: <span><%= instance['private_dns_name'] %></span><br/>
-                        <% if instance['chefified'] %> <%= link_to 'Chef Information', "/#{@project}/instance/#{instance['id']}/Chef"  %> <% end %>
+                        <% if instance['chefified'] %> <%= link_to 'Chef Information', "/#{@project}/compute/#{instance['id']}/Chef"  %> <% end %>
                     </div>
                 <% end %>
                 

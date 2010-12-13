@@ -1,0 +1,9 @@
+<% @title = 'IAM Groups' %>
+<h1>Groups</h1>
+<%= json_table(@iam_groups,"GroupName", "GroupId","Arn", "Path"  ) %>
+</br>
+<h1>Users</h1>
+<%= json_table(@iam_users,"UserName", "UserId","Arn", "Path"  ) %>
+</br>
+<h1>Access Keys</h1>
+<%= json_table(@iam_access_keys,"AccessKeyId", "Status") %>
