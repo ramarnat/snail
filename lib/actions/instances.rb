@@ -15,36 +15,36 @@ get '/:project/compute' do
   erb :instances
 end
 
-get '/:project/instance/:instance_id/terminate' do
+get '/:project/compute/:instance_id/terminate' do
   @output =  @ec2_compute.servers.get(params[:instance_id]).destroy
-  redirect '/instances'
+  redirect '/compute'
 end
 
-get '/:project/instance/:instance_id/output' do
+get '/:project/compute/:instance_id/output' do
   @output =  @ec2_compute.servers.get(params[:instance_id]).console_output.body
   erb :output
 end
 
-get '/:project/instance/:instance_id/reboot' do
+get '/:project/compute/:instance_id/reboot' do
   node =  @ec2_compute.servers.get(params[:instance_id])
   @output = @node.reboot if @node['state'] == 'running'
-  redirect '/instances'
+  redirect '/compute'
 end
 
-get '/:project/instance/:instance_id/start' do
+get '/:project/compute/:instance_id/start' do
   node =  @ec2_compute.servers.get(params[:instance_id])
   @output = @node.start if @node['state'] == 'stopped'
-  redirect '/instances'
+  redirect '/compute'
 end
 
-get '/:project/instance/:instance_id/stop' do
+get '/:project/compute/:instance_id/stop' do
   node =  @ec2_compute.servers.get(params[:instance_id])
   @output = @node.stop if @node['state'] == 'running'
-  redirect '/instances'
+  redirect '/compute'
 end
 
 
-get '/:project/instance/:instance_id/Chef' do  
+get '/:project/compute/:instance_id/Chef' do  
   @node = Chef::Node.load(params[:instance_id])
   @node = JSON.pretty_generate(@node)
   erb :node_raw
