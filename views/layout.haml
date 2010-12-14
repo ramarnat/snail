@@ -1,0 +1,22 @@
+!!! Strict
+%html
+ %head
+  %title= @title ? @title + ' | ' : '' Snail
+  %meta{'http-equiv' => "Content-Type", 'content' => "text/html; charset=utf-8"}
+  %link{:rel => "stylesheet", :href => "/yui-2.5.1-reset-fonts-grids.css", :type => "text/css"}
+  %link{:href=>"/style.css", :media=>"screen", :rel=>"Stylesheet", :type=>"text/css"}
+  %script{:type=>"text/javascript", :src=>"/jquery-1.2.6.min.js"}
+ %body  
+  .yui-t7{:id => "doc4"}
+   #hd
+    = partial :layout_header 
+
+   #bd
+    .yui-gf
+     .yui-u.first{:id => "nav"}
+      = partial :layout_navigation
+    .yui-u{:id=>"main"}
+     = yield
+
+   #ft
+    = partial :layout_footer 

@@ -7,8 +7,8 @@ abort('Could not find config/snail.yml file.') if !File.exists?(CONFIG_FILE)
 
 require 'rubygems'
 # make sure we're using the right version of gems
-gem 'sinatra', :version => '0.9.4'
-gem 'right_aws', :version =>'1.10.0'
+#gem 'sinatra', :version => '0.9.4'
+#gem 'right_aws', :version =>'1.10.0'
 require 'sinatra'
 require 'right_aws'
 require 'yaml'
@@ -17,6 +17,9 @@ require 'fog'
 require 'json'
 require 'pp'
 require 'chef'
+require 'haml'
+
+set :haml
 
 
 # load all files in lib
